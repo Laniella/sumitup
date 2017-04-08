@@ -1,4 +1,5 @@
 from Tkinter import Tk, Frame, BOTH, Canvas
+from random import randint
 
 class Sumitup(Frame):
 
@@ -16,9 +17,19 @@ class Sumitup(Frame):
         self.field = Canvas(self, width=500, height=300, background="gray25")
         self.field.pack()
         self.drawField()
-        self.makeTile(150, 40, 3)
-        self.makeTile(200, 80, -6)
-        self.makeTile(200, 40, -9)
+        self.tiles = []
+
+        self.teststuff()
+
+    #list of columns 0:140, 1:160 .... 10:360
+    columns = [x for x in range(140, 360, 20)]
+
+    def teststuff(self):
+    	
+        self.makeTile(randint(0, len(Sumitup.columns) - 1))
+        self.makeTile(randint(0, len(Sumitup.columns) - 1))
+        self.makeTile(randint(0, len(Sumitup.columns) - 1))
+        print self.tiles
 
 
     def centerWindow(self):
@@ -34,21 +45,33 @@ class Sumitup(Frame):
         self.parent.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
     def drawField(self):
-
+    	#This is main canvas
         self.field.create_rectangle(130, 20, 370, 280, fill="gray16")
-        #This is main canvas
-        self.field.create_rectangle(380, 20, 480, 120, fill="gray16")
+       
         #This is scoreboard
+        self.field.create_rectangle(380, 20, 480, 120, fill="gray16")
+        
 
-    def makeTile(self, x, y, number):
+    def makeTile(self, column):
+    	#tile color changes depending on the magnitude of the number
+    	number = randint(-9, 9)
 
         if number < 0:
-            self.field.create_rectangle(x, y, x+20, y+20, fill=self.reds[abs(number)-1])
+        	#tiles made at top of the main canvas, randomly
+            rec_id = self.field.create_rectangle(Sumitup.columns[column] - 10, 20,
+            									 Sumitup.columns[column] + 10, 40,
+            									 fill=self.reds[abs(number)-1])
         else:
-            self.field.create_rectangle(x, y, x+20, y+20, fill=self.blues[number-1])
-        #tile color changes depending on the magnitude of the number
+            rec_id = self.field.create_rectangle(Sumitup.columns[column] - 10, 20,
+            									 Sumitup.columns[column] + 10, 40, 
+            									 fill=self.blues[number-1])
+        
 
-        self.field.create_text(x+10, y+10, text=str(number), fill="#f2f2f2")
+        text_id = self.field.create_text(Sumitup.columns[column], 30, text=str(number), fill="#f2f2f2")
+
+        self.tiles.append((rec_id, text_id))
+    	
+
 
 def main():
 
