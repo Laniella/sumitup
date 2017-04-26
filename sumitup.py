@@ -21,6 +21,8 @@ class Sumitup(Frame):
 
         self.teststuff()
 
+        self.falltile()
+
     #list of columns 0:140, 1:160 .... 10:360
     columns = [x for x in range(140, 360, 20)]
 
@@ -70,6 +72,16 @@ class Sumitup(Frame):
         text_id = self.field.create_text(Sumitup.columns[column], 30, text=str(number), fill="#f2f2f2")
 
         self.tiles.append((rec_id, text_id))
+
+    #loop that makes tiles fall
+    def falltile(self):
+        for atile in self.tiles:
+            if self.field.coords(atile[0])[1] != 260:
+                #makes the rectangle fall
+                self.field.move(atile[0], 0, 20)
+                #makes the digit fall
+                self.field.move(atile[1], 0, 20)
+        self.after(500, self.falltile)
     	
 
 
@@ -78,7 +90,13 @@ def main():
     root = Tk()
     root.geometry("500x300+450+300")
     app = Sumitup(root)
-    root.mainloop()
+    #root.mainloop()
+
+    while 1:
+        try:
+            root.update()
+        except Exception as e:
+            exit()
 
 if __name__ == '__main__':
     main()
